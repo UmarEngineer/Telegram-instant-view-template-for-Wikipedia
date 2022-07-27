@@ -1,0 +1,44 @@
+
+// ADD VERSION
+~version: "2.1"
+
+// REQUIREMENT
+?exists: //div[@class="mw-parser-output"]
+// ADD MAIN PHOTO
+cover: $@
+
+// TITLE, SUBTITLE, BODY, DESCRIPTION
+title: //*[@id="content"]/div[2]/div[1]/h1
+subtitle: //*[@id="content"]/div[2]/div[1]/div
+body: //*[@id="content"]
+description: //*[@id="mf-section-0"]/div[1]
+image_url:   $cover/self::img/@src
+
+// REPLACE TAGS WHICH UNSUPPORTED XPATH
+@replace_tag(<figure>): $body//a[.//img]
+@replace_tag(<figure>): $body//td[.//img]
+@replace_tag(<figure>): $body//th[.//img]
+@replace_tag(<details>): $body//section[has-class("collapsible-block")]
+@replace_tag(<list>): $body//table//table
+
+
+@set_attr(Data-block, "Details"): $body//section[has-class("collapsible-block")]
+
+// REMOVE SOME TAGS WHICH NO NEED FOR INSTANT VIEW
+@remove: //*[@id="mf-section-0"]/table/tbody/tr[11]/td//a
+@remove: //*[@id="content"]/div[2]/nav
+@remove: //*[@id="mw-content-text"]/div[1]//h2/span[has-class("mw-editsection")]
+@remove: $body//section[1]//ul
+@remove: $body//section[1]//h2
+@remove: //*[@id="mw-mf-page-center"]/footer/div//ul
+@remove: //*[@id="page-secondary-actions"]
+@remove: //td//audio
+@remove: //b//img[@alt=("Bouncywikilogo.gif")]
+
+//COMBINE
+@combine(<br>,<br>): $body//pre/next-sibling::pre
+@combine(<br>,<br>): $body//blockquote/next-sibling::blockquote
+
+@split_parent: //a/img
+
+
